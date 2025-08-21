@@ -14,6 +14,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.const import __version__ as ha_version
 
 from .const import (
     CONF_HOSTNAME,
@@ -54,10 +55,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    for component in PLATFORMS:
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(entry, component)
-        )
+    if ha_version >= "2025.6":
+        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    else:
+        for component in PLATFORMS:
+            hass.async_create_task(
+                hass.config_entries.async_forward_entry_setup(entry, component)
+            )
 
     return True
 
