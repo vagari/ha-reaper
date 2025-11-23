@@ -7,12 +7,13 @@ import voluptuous as vol
 
 from homeassistant.components.media_player import MediaPlayerEntity
 from homeassistant.components.media_player.const import (
-    MEDIA_TYPE_MUSIC,
-    SUPPORT_NEXT_TRACK,
-    SUPPORT_PLAY,
-    SUPPORT_PREVIOUS_TRACK,
-    SUPPORT_STOP,
-    SUPPORT_VOLUME_SET,
+    MediaType,
+    MediaPlayerEntityFeature,
+    #SUPPORT_NEXT_TRACK,
+    #SUPPORT_PLAY,
+    #SUPPORT_PREVIOUS_TRACK,
+    #SUPPORT_STOP,
+    #SUPPORT_VOLUME_SET,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import STATE_IDLE, STATE_OFF, STATE_PAUSED, STATE_PLAYING
@@ -33,11 +34,11 @@ from .const import (
 )
 
 SUPPORT_REAPER = (
-    SUPPORT_PLAY
-    | SUPPORT_VOLUME_SET
-    | SUPPORT_PREVIOUS_TRACK
-    | SUPPORT_NEXT_TRACK
-    | SUPPORT_STOP
+    MediaPlayerEntityFeature.PLAY
+    | MediaPlayerEntityFeature.VOLUME_SET
+    | MediaPlayerEntityFeature.PREVIOUS_TRACK
+    | MediaPlayerEntityFeature.NEXT_TRACK
+    | MediaPlayerEntityFeature.STOP
 )
 
 
@@ -127,7 +128,7 @@ class ReaperMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     @property
     def media_content_type(self) -> Any:
         """Content type of current playing media."""
-        return MEDIA_TYPE_MUSIC
+        return MediaType.MUSIC
 
     @property
     def supported_features(self) -> Any:
