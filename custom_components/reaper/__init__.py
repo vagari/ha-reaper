@@ -5,6 +5,7 @@ from datetime import timedelta
 import logging
 from typing import Any, Final
 
+from packaging import version
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
 import async_timeout
@@ -55,7 +56,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    if ha_version >= "2025.6":
+    current_ha_version = version.parse(ha_version)
+    target_ha_version = version.parse("2025.6.0")
+
+    if current_ha_version >= target_ha_version:
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     else:
         for component in PLATFORMS:
